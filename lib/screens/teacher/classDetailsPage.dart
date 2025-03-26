@@ -267,7 +267,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                 leading: Icon(Icons.assessment, color: AppColors.accentBlue),
                 title: Text("Create Quiz",
                     style: TextStyle(color: AppColors.primaryText)),
-                onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>quiz_generate())),
+                onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>quiz_generate(classId: widget.classId,))),
               ),
               
             ],
