@@ -1,4 +1,5 @@
-
+import 'package:classcare/screens/student/studentQuiz.dart';
+import 'package:classcare/screens/teacher/quiz_generate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:classcare/screens/teacher/chat_tab.dart';
@@ -106,6 +107,46 @@ class _StudentClassDetailsState extends State<StudentClassDetails>
               fontWeight: FontWeight.w600,
               fontSize: h * 0.02,
             ),
+          ),
+        ),
+        drawer: Drawer(
+          backgroundColor: AppColors.surfaceColor,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: AppColors.cardColor,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.school_outlined,
+                      color: AppColors.accentBlue,
+                      size: h * 0.04,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "Class Options",
+                      style: TextStyle(
+                        color: AppColors.primaryText,
+                        fontSize: h * 0.02,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          
+              ListTile(
+                leading: Icon(Icons.assessment, color: AppColors.accentBlue),
+                title: Text("Quiz",
+                    style: TextStyle(color: AppColors.primaryText)),
+                onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>Studentquiz(classId: widget.classId,))),
+              ),
+              
+            ],
           ),
         ),
         body: Column(
