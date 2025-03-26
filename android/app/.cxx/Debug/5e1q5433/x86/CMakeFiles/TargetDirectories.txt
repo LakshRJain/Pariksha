@@ -1,0 +1,2 @@
+D:/Pariksha/android/app/.cxx/Debug/5e1q5433/x86/CMakeFiles/edit_cache.dir
+D:/Pariksha/android/app/.cxx/Debug/5e1q5433/x86/CMakeFiles/rebuild_cache.dir

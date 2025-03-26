@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "183430052939",
+    "project_id": "pariksha-cc65b",
+    "storage_bucket": "pariksha-cc65b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:183430052939:android:3da6b1e9a8d4c16a5161ce",
+        "android_client_info": {
+          "package_name": "com.example.classcare"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN4jZppOm42HrOFkoaUI0Eb-_j1oEzLZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
