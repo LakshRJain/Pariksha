@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
+import 'package:csv/csv.dart';
 
 class CreateTestScreen extends StatefulWidget {
   final Map<String, dynamic>? existingTest;
@@ -155,6 +158,170 @@ class _CreateTestScreenState extends State<CreateTestScreen> {
     }
   }
 
+  Future<void> _importFromCSV() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['csv'],
+      );
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        String csvString = await file.readAsString();
+
+        // Print raw CSV content for debugging
+        print('Raw CSV Content:\n$csvString');
+
+        // Try different parsing strategies
+        List<List<dynamic>> csvTable = [];
+
+        try {
+          // First, try with custom CSV converter that's more lenient
+          csvTable = const CsvToListConverter(
+            eol: '\n',
+            fieldDelimiter: '\t', // Change from ',' to '\t'
+            textDelimiter: '"',
+            shouldParseNumbers: false,
+          ).convert(csvString);
+          print('CSV Content Preview:\n$csvString');
+          print('Processed Rows: ${csvTable.length}');
+          print(
+              'First Row Columns: ${csvTable.isNotEmpty ? csvTable[0].length : "Empty"}');
+
+          for (var row in csvTable) {
+            print(row);
+          }
+        } catch (e) {
+          print('First parsing method failed: 🟥$e');
+
+          // Fallback: manual parsing
+          csvTable = csvString.split('\n').map((line) {
+            // Use regex to split while respecting quotes
+            return RegExp(r',(?=(?:[^"]"[^"]")[^"]$)')
+                .allMatches(line)
+                .map((match) => line.substring(match.start, match.end).trim())
+                .toList();
+          }).toList();
+        }
+
+        // Enhanced debugging for column detection
+        if (csvTable.isNotEmpty) {
+          var firstRow = csvTable[0][0].split(',');
+          print('fff');
+          print(firstRow);
+          print('Total Columns Detected: ${firstRow.length}');
+          print('Detected Columns:');
+          for (int i = 0; i < firstRow.length; i++) {
+            print('Column $i: "${firstRow[i]}"');
+          }
+        }
+
+        // Skip header row if it exists
+        List<List<dynamic>> dataRows =
+            csvTable.length > 1 ? csvTable.sublist(1) : csvTable;
+
+        List<Map<String, dynamic>> importedQuestions = [];
+        List<String> skippedRowReasons = [];
+
+        for (var Trow in dataRows) {
+          var row=Trow[0].split(',');
+          // Detailed logging of row length and content
+          print('Processing Row (Length: ${row.length}):');
+          for (int i = 0; i < row.length; i++) {
+            print('Column $i: "${row[i]}" (Type: ${row[i].runtimeType})');
+          }
+
+          // Ensure we have enough columns
+          if (row.length < 6) {
+            skippedRowReasons.add(
+                'Row skipped: Insufficient columns (found ${row.length}, expected at least 6)');
+            continue;
+          }
+
+          // Validate question and options are not empty
+          if (row[0].toString().trim().isEmpty) {
+            skippedRowReasons.add('Row skipped: Question is empty');
+            continue;
+          }
+
+          // Check if options are not empty
+          bool anyEmptyOption = false;
+          for (int i = 1; i < 5; i++) {
+            if (row[i].toString().trim().isEmpty) {
+              skippedRowReasons.add('Row skipped: Option ${i - 1} is empty');
+              anyEmptyOption = true;
+              break;
+            }
+          }
+          if (anyEmptyOption) continue;
+
+          // Find the correct option index
+          String correctAnswer = row[5].toString().toLowerCase().trim();
+          int correctOptionIndex = -1;
+
+          switch (correctAnswer) {
+            case '0':
+              correctOptionIndex = 0;
+              break;
+            case '1':
+              correctOptionIndex = 1;
+              break;
+            case '2':
+              correctOptionIndex = 2;
+              break;
+            case '3':
+              correctOptionIndex = 3;
+              break;
+            default:
+              skippedRowReasons.add(
+                  'Row skipped: Invalid correct answer "$correctAnswer" (must be 0, 1, 2, or 3)');
+              continue;
+          }
+
+          // Create the question map
+          Map<String, dynamic> question = {
+            'question': row[0].toString().trim(),
+            'options': [
+              row[1].toString().trim(),
+              row[2].toString().trim(),
+              row[3].toString().trim(),
+              row[4].toString().trim(),
+            ],
+            'correct': correctOptionIndex,
+          };
+
+          importedQuestions.add(question);
+        }
+
+        // Update state with imported questions
+        setState(() {
+          _questions.addAll(importedQuestions);
+        });
+
+        // Prepare feedback message
+        String message =
+            '${importedQuestions.length} questions imported successfully';
+        if (skippedRowReasons.isNotEmpty) {
+          message += '\n\nSkipped Rows:';
+          for (var reason in skippedRowReasons) {
+            message += '\n- $reason';
+          }
+        }
+
+        // Show success message
+        _showSnackBar(message, Colors.green);
+
+        // Print total imported questions
+        print('Total Imported Questions: ${importedQuestions.length}');
+        print('Skipped Row Reasons: $skippedRowReasons');
+      }
+    } catch (e) {
+      // Show error message
+      _showSnackBar('Error importing CSV: ${e.toString()}', Colors.red);
+      print('CSV Import Error: $e');
+    }
+  }
+
   void _addQuestion() {
     if (_questionController.text.isNotEmpty && _correctOption != null) {
       _questions.add({
@@ -255,80 +422,168 @@ class _CreateTestScreenState extends State<CreateTestScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
+        title: Text(
           'Create Test',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 22,
+            fontSize: 20, // Reduced from 22
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
+            letterSpacing: 0.4, // Slightly reduced
           ),
         ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(
+              horizontal: 12.0, vertical: 8.0), // Reduced padding
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Test Name Input
               _buildTextField(
                 controller: _testNameController,
-                labelText: 'Enter Test Name',
+                labelText: 'Test Name',
                 icon: Icons.text_fields,
                 color: Colors.blue.shade200,
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 12), // Reduced height
 
               // Test Duration Input
               _buildTextField(
                 controller: _testDurationController,
-                labelText: 'Test Duration (minutes)',
+                labelText: 'Duration (minutes)',
                 icon: Icons.timer,
                 color: Colors.green.shade200,
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
 
-              // Start Date and Time
+              // Date and Time Selectors
               _buildDateTimeSelector(
-                label: 'Start Date and Time',
+                label: 'Start Date/Time',
                 icon: Icons.calendar_today,
                 color: Colors.purple.shade200,
                 dateTime: _startDate,
                 onTap: _selectStartDateTime,
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
 
-              // End Date and Time
               _buildDateTimeSelector(
-                label: 'End Date and Time',
+                label: 'End Date/Time',
                 icon: Icons.event_available,
                 color: Colors.orange.shade200,
                 dateTime: _endDate,
                 onTap: _selectEndDateTime,
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
 
-              // Existing question creation logic remains the same
+              // Question Container
               _buildQuestionContainer(),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
 
-              _buildActionButtons(),
+              // Action Buttons (Compact Row)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildCompactButton(
+                      text: 'Import CSV',
+                      icon: Icons.upload_file,
+                      onPressed: _importFromCSV,
+                      color: Colors.blue.shade700,
+                    ),
+                    const SizedBox(width: 8),
+                    _buildCompactButton(
+                      text: 'Add Question',
+                      icon: Icons.add,
+                      onPressed: _addQuestion,
+                      color: Colors.purple.shade700,
+                    ),
+                    const SizedBox(width: 8),
+                    _buildCompactButton(
+                      text: 'Submit Test',
+                      icon: Icons.check,
+                      onPressed: _submitTest,
+                      color: Colors.green.shade700,
+                    ),
+                  ],
+                ),
+              ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
 
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
+              // Questions List with Constrained Height
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height *
+                      0.3, // Reduced from 0.4
+                ),
                 child: _buildQuestionsList(),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    required IconData icon,
+    required Color color,
+    int maxLines = 1,
+  }) {
+    return TextField(
+      controller: controller,
+      style: const TextStyle(
+          color: Colors.white, fontSize: 14), // Reduced font size
+      maxLines: maxLines,
+      decoration: InputDecoration(
+        labelText: labelText,
+        labelStyle: TextStyle(color: Colors.grey.shade400, fontSize: 12),
+        prefixIcon: Icon(icon, color: color, size: 20),
+        isDense: true, // More compact
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        // Rest of the decoration remains the same
+      ),
+    );
+  }
+
+  Widget _buildCompactButton({
+    required String text,
+    required IconData icon,
+    required VoidCallback onPressed,
+    required Color color,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(
+        icon,
+        size: 16,
+        color: Colors.white, // Ensure icon is white for visibility
+      ),
+      label: Text(
+        text,
+        style: TextStyle(
+            fontSize: 12,
+            color: Colors.white, // Explicit white text
+            fontWeight: FontWeight.w600),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: Colors.white, // Ensures text and icon color
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 3, // Add some elevation for depth
       ),
     );
   }
@@ -415,35 +670,6 @@ class _CreateTestScreenState extends State<CreateTestScreen> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    required IconData icon,
-    required Color color,
-    int maxLines = 1,
-  }) {
-    return TextField(
-      controller: controller,
-      style: const TextStyle(color: Colors.white),
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: TextStyle(color: Colors.grey.shade400),
-        prefixIcon: Icon(icon, color: color),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: color, width: 1.5),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-      ),
-    );
-  }
-
   Widget _buildOptionTile(int index) {
     return ListTile(
       title: _buildTextField(
@@ -469,6 +695,12 @@ class _CreateTestScreenState extends State<CreateTestScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        _buildGradientButton(
+          text: 'Import CSV',
+          startColor: Colors.blue.shade900.withOpacity(0.5),
+          endColor: Colors.cyan.shade900.withOpacity(0.5),
+          onPressed: _importFromCSV,
+        ),
         _buildGradientButton(
           text: 'Add Question',
           startColor: Colors.purple.shade900.withOpacity(0.5),
