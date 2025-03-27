@@ -10,11 +10,11 @@ class StudentTestScreen extends StatefulWidget {
   final Map<String, dynamic> testDetails;
 
   const StudentTestScreen({
-    Key? key,
+    super.key,
     required this.testId,
     required this.classId,
     required this.testDetails,
-  }) : super(key: key);
+  });
 
   @override
   _StudentTestScreenState createState() => _StudentTestScreenState();
@@ -36,7 +36,7 @@ class _StudentTestScreenState extends State<StudentTestScreen>
 
   // App switch tracking
   int _switchCount = 0;
-  bool _isActive = true;
+  final bool _isActive = true;
 
   @override
   void initState() {

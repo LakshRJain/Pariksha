@@ -1,11 +1,15 @@
+import 'package:classcare/screens/teacher/generate_mcq_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:classcare/screens/teacher/createTestScreen.dart';
 
 class quiz_generate extends StatefulWidget {
   final String classId;
-  
-  const quiz_generate({super.key,required this.classId,});
+
+  const quiz_generate({
+    super.key,
+    required this.classId,
+  });
   @override
   _quiz_generateState createState() => _quiz_generateState();
 }
@@ -17,7 +21,7 @@ class _quiz_generateState extends State<quiz_generate> {
   @override
   void initState() {
     super.initState();
-    _fetchTests(); 
+    _fetchTests();
   }
 
   Future<void> _fetchTests() async {
@@ -41,9 +45,9 @@ class _quiz_generateState extends State<quiz_generate> {
               'name': doc['name'] ?? 'Unnamed Test',
               'questions': doc['questions'] ?? [],
               'updatedAt': doc['updatedAt'],
-              'startDateTime':convertTimestampToDateTime(doc['startDateTime']),
-              'endDateTime':convertTimestampToDateTime(doc['endDateTime']),
-              'duration':doc['duration'],
+              'startDateTime': convertTimestampToDateTime(doc['startDateTime']),
+              'endDateTime': convertTimestampToDateTime(doc['endDateTime']),
+              'duration': doc['duration'],
             };
           }).toList();
           _isLoading = false;
@@ -64,22 +68,24 @@ class _quiz_generateState extends State<quiz_generate> {
       _showErrorSnackBar(e.toString());
     }
   }
-DateTime? convertTimestampToDateTime(dynamic timestamp) {
-  if (timestamp == null) return null;
-  
-  if (timestamp is Timestamp) {
-    return timestamp.toDate(); // Convert Firestore Timestamp to DateTime
-  } else if (timestamp is String) {
-    try {
-      return DateTime.parse(timestamp); // If stored as a string in ISO 8601 format
-    } catch (e) {
-      print("Error parsing timestamp string: $e");
-      return null;
+
+  DateTime? convertTimestampToDateTime(dynamic timestamp) {
+    if (timestamp == null) return null;
+
+    if (timestamp is Timestamp) {
+      return timestamp.toDate(); // Convert Firestore Timestamp to DateTime
+    } else if (timestamp is String) {
+      try {
+        return DateTime.parse(
+            timestamp); // If stored as a string in ISO 8601 format
+      } catch (e) {
+        print("Error parsing timestamp string: $e");
+        return null;
+      }
     }
+
+    return null;
   }
-  
-  return null;
-}
 
   void _showErrorSnackBar(String errorMessage) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -96,7 +102,10 @@ DateTime? convertTimestampToDateTime(dynamic timestamp) {
   void _navigateToCreateTest() async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreateTestScreen(classId: widget.classId,)),
+      MaterialPageRoute(
+          builder: (context) => CreateTestScreen(
+                classId: widget.classId,
+              )),
     );
 
     if (result != null) {
@@ -109,9 +118,7 @@ DateTime? convertTimestampToDateTime(dynamic timestamp) {
       context,
       MaterialPageRoute(
         builder: (context) => CreateTestScreen(
-          existingTest: _tests[index],
-          classId: widget.classId
-        ),
+            existingTest: _tests[index], classId: widget.classId),
       ),
     );
 
@@ -169,6 +176,20 @@ DateTime? convertTimestampToDateTime(dynamic timestamp) {
                 startColor: Colors.purple.shade900.withOpacity(0.5),
                 endColor: Colors.indigo.shade900.withOpacity(0.5),
                 onPressed: _navigateToCreateTest,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: _buildGradientButton(
+                text: 'GenerateMCQScreen',
+                startColor: Colors.purple.shade900.withOpacity(0.5),
+                endColor: Colors.indigo.shade900.withOpacity(0.5),
+                onPressed: () => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GenerateMCQScreen()))
+                },
               ),
             ),
             Expanded(
