@@ -55,6 +55,17 @@ Watch the product demo on:
   - Google Vision API for OCR and analysis
   - Gemini API for question generation, assignment grading and insights
 
+## Latest Version - v1.0.0
+<table>
+  <tr>
+    <td>
+      <a href="https://github.com/LakshRJain/Pariksha/releases/download/1.0.0v/app-release.apk">
+        <img src="https://user-images.githubusercontent.com/663460/26973090-f8fdc986-4d14-11e7-995a-e7c5e79ed925.png" alt="Github" width="200">
+      </a>
+    </td>
+  </tr>
+</table>
+
 ## 🚀 Getting Started
 
 ### Prerequisites
