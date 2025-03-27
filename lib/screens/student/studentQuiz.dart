@@ -1,3 +1,4 @@
+import 'package:classcare/screens/student/Quiz_student.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -7,7 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class Studentquiz extends StatefulWidget {
   final String classId;
 
-  const Studentquiz({Key? key, required this.classId}) : super(key: key);
+  const Studentquiz({super.key, required this.classId});
 
   @override
   _StudentquizState createState() => _StudentquizState();
@@ -212,8 +213,7 @@ class _StudentquizState extends State<Studentquiz> {
                 _buildTestInfoRow(
                   icon: Icons.calendar_today,
                   text: endDateTime != null
-                      ? DateFormat('MMM dd, yyyy - hh:mm a')
-                          .format(endDateTime)
+                      ? DateFormat('MMM dd, yyyy - hh:mm a').format(endDateTime)
                       : 'End Time Unspecified',
                 ),
                 const SizedBox(height: 5),
@@ -233,7 +233,6 @@ class _StudentquizState extends State<Studentquiz> {
       ),
     );
   }
-
 
   Widget _buildTestInfoRow({required IconData icon, required String text}) {
     return Row(
@@ -299,8 +298,7 @@ class _StudentquizState extends State<Studentquiz> {
                 icon: Icons.calendar_today,
                 label: 'End Time',
                 value: endDateTime != null
-                    ? DateFormat('MMMM dd, yyyy - hh:mm a')
-                        .format(endDateTime)
+                    ? DateFormat('MMMM dd, yyyy - hh:mm a').format(endDateTime)
                     : 'Not Specified',
               ),
               const SizedBox(height: 10),
@@ -325,8 +323,17 @@ class _StudentquizState extends State<Studentquiz> {
                     ),
                   ),
                   onPressed: () {
-                    // TODO: Implement quiz start logic
-                    Navigator.pop(context);
+                    Navigator.pop(context); // Close the bottom sheet
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StudentTestScreen(
+                          testId: test['id'],
+                          classId: widget.classId,
+                          testDetails: {},
+                        ),
+                      ),
+                    );
                   },
                   child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),

@@ -6,7 +6,7 @@ class CreateTestScreen extends StatefulWidget {
   final Map<String, dynamic>? existingTest;
   final String classId;
 
-  CreateTestScreen({required this.classId,this.existingTest ,super.key });
+  const CreateTestScreen({required this.classId, this.existingTest, super.key});
 
   @override
   _CreateTestScreenState createState() => _CreateTestScreenState();
@@ -26,73 +26,75 @@ class _CreateTestScreenState extends State<CreateTestScreen> {
   DateTime? _endDate;
   TimeOfDay? _endTime;
   @override
-void dispose() {
-  _testNameController.dispose();
-  _testDurationController.dispose();
-  _questionController.dispose();
-  for (var controller in _optionControllers) {
-    controller.dispose();
+  void dispose() {
+    _testNameController.dispose();
+    _testDurationController.dispose();
+    _questionController.dispose();
+    for (var controller in _optionControllers) {
+      controller.dispose();
+    }
+    super.dispose();
   }
-  super.dispose();
-}
 
   @override
   void initState() {
     super.initState();
     if (widget.existingTest != null) {
-  _existingTestId = widget.existingTest!['id']; // Store the existing test ID
-  _testNameController.text = widget.existingTest!['name'] ?? '';
-  _questions = List.from(widget.existingTest!['questions'] ?? []);
-  
-  print("hiiiiii");
+      _existingTestId =
+          widget.existingTest!['id']; // Store the existing test ID
+      _testNameController.text = widget.existingTest!['name'] ?? '';
+      _questions = List.from(widget.existingTest!['questions'] ?? []);
 
-  // Safely check and set start and end dates
-  var startDateRaw = widget.existingTest!['startDateTime'];
-  if (startDateRaw != null) {
-    print("date1");
-    if (startDateRaw is Timestamp) {
-      _startDate = startDateRaw.toDate(); // Convert Firestore Timestamp
-    } else if (startDateRaw is String) {
-      try {
-        _startDate = DateTime.parse(startDateRaw); // If it's an ISO string
-      } catch (e) {
-        print("Error parsing startDateTime string: $e");
+      print("hiiiiii");
+
+      // Safely check and set start and end dates
+      var startDateRaw = widget.existingTest!['startDateTime'];
+      if (startDateRaw != null) {
+        print("date1");
+        if (startDateRaw is Timestamp) {
+          _startDate = startDateRaw.toDate(); // Convert Firestore Timestamp
+        } else if (startDateRaw is String) {
+          try {
+            _startDate = DateTime.parse(startDateRaw); // If it's an ISO string
+          } catch (e) {
+            print("Error parsing startDateTime string: $e");
+          }
+        } else if (startDateRaw is DateTime) {
+          _startDate = startDateRaw; // If already converted
+        }
+
+        _startTime =
+            _startDate != null ? TimeOfDay.fromDateTime(_startDate!) : null;
       }
-    } else if (startDateRaw is DateTime) {
-      _startDate = startDateRaw; // If already converted
-    }
-    
-    _startTime = _startDate != null ? TimeOfDay.fromDateTime(_startDate!) : null;
-  }
-  print("date");
+      print("date");
 
-  var endDateRaw = widget.existingTest!['endDateTime'];
-  if (endDateRaw != null) {
-    print("time");
-    if (endDateRaw is Timestamp) {
-      _endDate = endDateRaw.toDate();
-    } else if (endDateRaw is String) {
-      try {
-        _endDate = DateTime.parse(endDateRaw);
-      } catch (e) {
-        print("Error parsing endDateTime string: $e");
+      var endDateRaw = widget.existingTest!['endDateTime'];
+      if (endDateRaw != null) {
+        print("time");
+        if (endDateRaw is Timestamp) {
+          _endDate = endDateRaw.toDate();
+        } else if (endDateRaw is String) {
+          try {
+            _endDate = DateTime.parse(endDateRaw);
+          } catch (e) {
+            print("Error parsing endDateTime string: $e");
+          }
+        } else if (endDateRaw is DateTime) {
+          _endDate = endDateRaw;
+        }
+
+        _endTime = _endDate != null ? TimeOfDay.fromDateTime(_endDate!) : null;
       }
-    } else if (endDateRaw is DateTime) {
-      _endDate = endDateRaw;
+      print("time");
+
+      // Populate test duration if exists
+      if (widget.existingTest!['duration'] != null) {
+        print("duration");
+        _testDurationController.text =
+            widget.existingTest!['duration'].toString();
+      }
+      print("duration");
     }
-
-    _endTime = _endDate != null ? TimeOfDay.fromDateTime(_endDate!) : null;
-  }
-  print("time");
-
-  // Populate test duration if exists
-  if (widget.existingTest!['duration'] != null) {
-    print("duration");
-    _testDurationController.text = widget.existingTest!['duration'].toString();
-  }
-  print("duration");
-}
-
   }
 
   Future<void> _selectStartDateTime() async {
@@ -203,8 +205,7 @@ void dispose() {
           'questions': _questions,
           'startDateTime': Timestamp.fromDate(_startDate!),
           'endDateTime': Timestamp.fromDate(_endDate!),
-          'duration': int.parse(
-              _testDurationController.text),
+          'duration': int.parse(_testDurationController.text),
           'updatedAt': FieldValue.serverTimestamp(),
         };
 

@@ -1,10 +1,8 @@
 import 'package:classcare/screens/login.dart';
-import 'package:classcare/screens/student/hometStudent.dart';
-import 'package:classcare/screens/teacher/homeTeacher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:classcare/widgets/Colors.dart';
+
 class SignupPage extends StatefulWidget {
   final String post;
   const SignupPage({super.key, required this.post});
@@ -301,5 +299,4 @@ class _SignupPageState extends State<SignupPage> {
       ),
     );
   }
-
 }

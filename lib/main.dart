@@ -7,18 +7,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
- 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await Permission.storage.request();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     androidProvider: AndroidProvider.debug,
     appleProvider: AppleProvider.debug,
   );
-  
+
   User? currentUser = FirebaseAuth.instance.currentUser;
 
   // Check user role if logged in
@@ -37,10 +36,8 @@ void main() async {
 
 Future<String?> getUserRole(String userId) async {
   try {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(userId)
-        .get();
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
     if (userDoc.exists) {
       return userDoc['role']; // Assumes Firestore has field 'role'
@@ -59,7 +56,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/start':(context)=>Start(),
+        '/start': (context) => Start(),
       },
       title: 'Pariksha',
       debugShowCheckedModeBanner: false,

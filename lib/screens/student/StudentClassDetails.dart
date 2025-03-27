@@ -1,5 +1,4 @@
 import 'package:classcare/screens/student/studentQuiz.dart';
-import 'package:classcare/screens/teacher/quiz_generate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:classcare/screens/teacher/chat_tab.dart';
@@ -71,9 +70,6 @@ class _StudentClassDetailsState extends State<StudentClassDetails>
         .get();
   }
 
-  
-
-
   // Function to handle tab selection
   void _selectTab(int index) {
     setState(() {
@@ -138,14 +134,17 @@ class _StudentClassDetailsState extends State<StudentClassDetails>
                   ],
                 ),
               ),
-          
               ListTile(
                 leading: Icon(Icons.assessment, color: AppColors.accentBlue),
                 title: Text("Quiz",
                     style: TextStyle(color: AppColors.primaryText)),
-                onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>Studentquiz(classId: widget.classId,))),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Studentquiz(
+                              classId: widget.classId,
+                            ))),
               ),
-              
             ],
           ),
         ),
@@ -155,7 +154,7 @@ class _StudentClassDetailsState extends State<StudentClassDetails>
             Container(
               margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
               padding: EdgeInsets.all(h * 0.018),
-              decoration: BoxDecoration( 
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
                     AppColors.accentBlue.withOpacity(0.2),
@@ -200,7 +199,7 @@ class _StudentClassDetailsState extends State<StudentClassDetails>
             ),
 
             // Give Attendance Button - Styled to match the first file's design
-            
+
             // Custom boxed tab bar with fixed segments - matches the first file design
             Container(
               margin: EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -212,7 +211,7 @@ class _StudentClassDetailsState extends State<StudentClassDetails>
               child: Row(
                 children: [
                   // Assignments Tab
-                  
+
                   // Chat Tab
                   Expanded(
                     child: GestureDetector(
@@ -261,7 +260,6 @@ class _StudentClassDetailsState extends State<StudentClassDetails>
 
             // Tab content - styled to match the first file
             Expanded(
-              
               child: Container(
                 margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
                 decoration: BoxDecoration(
