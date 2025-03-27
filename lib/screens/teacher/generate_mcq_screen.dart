@@ -24,7 +24,7 @@ class _GenerateMCQScreenState extends State<GenerateMCQScreen> {
 
   Future<String> fetchMCQsFromGemini(
       int numQuestions, String topic, String difficulty) async {
-    const apiKey = 'AIzaSyDSzqEwTjOmoHI0YAhjrQHDHAH0ecw3zrI';
+    const apiKey = '';
     const url =
         'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$apiKey';
 
