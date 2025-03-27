@@ -1,7 +1,8 @@
-import 'package:classcare/screens/teacher/Quiz_generate.dart';
+import 'package:classcare/screens/teacher/quiz_generate.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:classcare/screens/teacher/students_list.dart';
+import 'package:classcare/screens/teacher/assignments_tab.dart';
 import 'package:classcare/screens/teacher/chat_tab.dart';
 import 'package:flutter/services.dart';
 
@@ -46,7 +47,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
 
     // Add listener to update state when tab changes
     _tabController.addListener(() {
@@ -269,6 +270,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                     style: TextStyle(color: AppColors.primaryText)),
                 onTap: ()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>quiz_generate(classId: widget.classId,))),
               ),
+            
               
             ],
           ),
@@ -378,9 +380,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                     ),
                   ),
 
-               
-
-                  // Chat Tab
+                  // Assignments Tab
                   Expanded(
                     child: GestureDetector(
                       onTap: () => _selectTab(1),
@@ -389,7 +389,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                           color: _currentIndex == 1
                               ? AppColors.cardColor
                               : Colors.transparent,
-                          borderRadius: BorderRadius.circular(w * 0.03),
+                          borderRadius: BorderRadius.circular(8),
                           border: _currentIndex == 1
                               ? Border.all(
                                   color: AppColors.accentBlue.withOpacity(0.5),
@@ -400,8 +400,51 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.chat_bubble_outline,
+                              Icons.assignment_outlined,
                               color: _currentIndex == 1
+                                  ? AppColors.accentBlue
+                                  : AppColors.secondaryText,
+                              size: 20,
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              "Assignments",
+                              style: TextStyle(
+                                color: _currentIndex == 1
+                                    ? AppColors.accentBlue
+                                    : AppColors.secondaryText,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Chat Tab
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => _selectTab(2),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: _currentIndex == 2
+                              ? AppColors.cardColor
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(w * 0.03),
+                          border: _currentIndex == 2
+                              ? Border.all(
+                                  color: AppColors.accentBlue.withOpacity(0.5),
+                                  width: 1)
+                              : null,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.chat_bubble_outline,
+                              color: _currentIndex == 2
                                   ? AppColors.accentBlue
                                   : AppColors.secondaryText,
                               size: 20,
@@ -410,7 +453,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                             Text(
                               "Chat",
                               style: TextStyle(
-                                color: _currentIndex == 1
+                                color: _currentIndex == 2
                                     ? AppColors.accentBlue
                                     : AppColors.secondaryText,
                                 fontSize: 12,
@@ -439,6 +482,7 @@ class _ClassDetailPageState extends State<ClassDetailPage>
                   controller: _tabController,
                   children: [
                     StudentsList(classId: widget.classId),
+                    AssignmentsTab(classId: widget.classId),
                     ChatTab(classId: widget.classId),
                   ],
                 ),

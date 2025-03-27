@@ -67,46 +67,46 @@ class Start extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Swipe Button for Teacher with Shadow
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 77, 70, 53)
-                                .withOpacity(0.4),
-                            spreadRadius: 3,
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: SwipeButton.expand(
-                        thumb: const Icon(
-                          Icons.double_arrow_rounded,
-                          color: Colors.white,
-                        ),
-                        activeThumbColor:
-                            AppColors.accentPurple,
-                        activeTrackColor: Colors.grey.shade300,
-                        onSwipe: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  LoginPage(post: "Admin"),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Admin",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: AppColors.accentPurple,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     borderRadius: BorderRadius.circular(25),
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //         color: const Color.fromARGB(255, 77, 70, 53)
+                    //             .withOpacity(0.4),
+                    //         spreadRadius: 3,
+                    //         blurRadius: 8,
+                    //         offset: const Offset(0, 4),
+                    //       ),
+                    //     ],
+                    //   ),
+                    //   child: SwipeButton.expand(
+                    //     thumb: const Icon(
+                    //       Icons.double_arrow_rounded,
+                    //       color: Colors.white,
+                    //     ),
+                    //     activeThumbColor:
+                    //         AppColors.accentPurple,
+                    //     activeTrackColor: Colors.grey.shade300,
+                    //     onSwipe: () {
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //           builder: (BuildContext context) =>
+                    //               LoginPage(post: "Admin"),
+                    //         ),
+                    //       );
+                    //     },
+                    //     child: const Text(
+                    //       "Admin",
+                    //       style: TextStyle(
+                    //         fontSize: 20,
+                    //         color: AppColors.accentPurple,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 20),
 
                     // Swipe Button for Teacher with Shadow
                     Container(
