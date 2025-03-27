@@ -8,7 +8,8 @@
 
 ## 🚀 Overview
 
-A Flutter-based app that enables teachers to create and manage quizzes and assignments while using AI for question generation, cheating detection, and assignment evaluation. Students can take quizzes, upload assignments, and receive AI-generated feedback.
+Pariksha is a powerful Flutter-based examination management app designed to revolutionize the way educators create, manage, and evaluate quizzes and assignments. The app eliminates the hassle of manual grading, question preparation, and student performance tracking by leveraging cutting-edge AI-driven automation.
+With Pariksha, teachers can set up virtual classrooms, generate AI-powered quizzes, detect cheating, and provide instant feedback on assignments. Students can seamlessly join classes, take quizzes, submit assignments, and receive detailed AI-generated feedback to improve their learning.
 
 ---
 
