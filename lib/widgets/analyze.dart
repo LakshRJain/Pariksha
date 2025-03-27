@@ -8,36 +8,53 @@ import 'package:pdf_render/pdf_render.dart';
 class PDFUploadService {
   Future<String> extractTextFromPDF(String fileUrl) async {
     try {
-      print(fileUrl);
+      print("Downloading PDF from: $fileUrl");
       final response = await http.get(Uri.parse(fileUrl));
-      print(response);
+
       if (response.statusCode == 200) {
         final tempDir = await getTemporaryDirectory();
-        print("hkjkiohiok");
         final filePath = '${tempDir.path}/downloaded_file.pdf';
 
         File file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
+        print("PDF downloaded successfully: $filePath");
 
-        print("hkjkiohiok");
+        // Verify file existence
+        if (!await file.exists()) {
+          throw Exception("Downloaded PDF file does not exist.");
+        }
+
+        // Check file size
+        final fileSize = await file.length();
+        print("PDF file size: $fileSize bytes");
+
+        if (fileSize == 0) {
+          throw Exception("Downloaded PDF file is empty.");
+        }
+
+        // Convert PDF pages to images
         List<String> imagePaths = await _convertPdfToImages(file);
         print("Generated Image Paths: $imagePaths");
 
+        // Extract text from images
         String extractedText = await extractTextFromImages(imagePaths);
-        print("HEREEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-        print(extractedText);
+        print("Extracted Text: $extractedText");
         return extractedText;
       } else {
-        throw Exception('Failed to download file: ${response.statusCode}');
+        throw Exception('Failed to download PDF: HTTP ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Error extracting text from PDF: $e');
+      print("Error: $e");
+      return 'Error extracting text from PDF: $e';
     }
   }
 
   Future<List<String>> _convertPdfToImages(File pdfFile) async {
-    print("XCZXZ");
-    final pdfDocument = await PdfDocument.openFile(pdfFile.path);
+    print("Converting PDF to images...");
+
+    final pdfBytes = await pdfFile.readAsBytes();
+    final pdfDocument = await PdfDocument.openData(pdfBytes);
+
     final tempDir = await getTemporaryDirectory();
     List<String> imagePaths = [];
 
@@ -59,19 +76,17 @@ class PDFUploadService {
 
       image.dispose();
     }
+
+    print("PDF conversion complete.");
     return imagePaths;
   }
 
   Future<String> extractTextFromImages(List<String> imagePaths) async {
     if (imagePaths.isEmpty) return "";
 
-    int totalImages = imagePaths.length;
-    int half = (totalImages / 2).ceil();
+    int half = (imagePaths.length / 2).ceil();
     List<String> firstHalf = imagePaths.sublist(0, half);
     List<String> secondHalf = imagePaths.sublist(half);
-
-    //print("First Half Images: $firstHalf");
-    //print("Second Half Images: $secondHalf");
 
     Future<String> firstHalfText = _processImageBatch(
         firstHalf, "AIzaSyAiH173s0PPDFWNtJpcuzPLdu3i_0mi8Ao", "API_1");
@@ -79,10 +94,6 @@ class PDFUploadService {
         secondHalf, "AIzaSyB4mpffbJQfgCzdBX_z6dELHqSRI0hvg_I", "API_2");
 
     List<String> results = await Future.wait([firstHalfText, secondHalfText]);
-
-    //print("Extracted First Half Text: ${results[0]}");
-    //print("Extracted Second Half Text: ${results[1]}");
-
     return results.join();
   }
 
@@ -90,16 +101,12 @@ class PDFUploadService {
       List<String> imagePaths, String apiKey, String apiLabel) async {
     String extractedText = "";
 
-    //print("Processing $apiLabel with images: $imagePaths");
-
     for (String imagePath in imagePaths) {
       File imageFile = File(imagePath);
       if (!await imageFile.exists()) {
         print("Error: Image $imagePath does not exist.");
         continue;
       }
-
-      //print("Processing image: $imagePath with $apiLabel");
 
       final imageBytes = await imageFile.readAsBytes();
       final base64Image = base64Encode(imageBytes);
@@ -135,8 +142,6 @@ class PDFUploadService {
         print("Error ${response.statusCode} for $imagePath: ${response.body}");
       }
     }
-
-    //print("Final extracted text for $apiLabel: $extractedText");
     return extractedText;
   }
 

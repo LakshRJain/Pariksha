@@ -286,93 +286,100 @@ class _StudentTestScreenState extends State<StudentTestScreen>
 
   Widget _buildQuestionCard() {
     final currentQuestion = _questions[_currentQuestionIndex];
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey.shade900,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.purple.shade200.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Question ${_currentQuestionIndex + 1}/${_questions.length}',
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 16,
-                  ),
-                ),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey.shade900,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.purple.shade200.withOpacity(0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade900,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Center(
+            ],
+          ),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      currentQuestion['question'],
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      'Question ${_currentQuestionIndex + 1}/${_questions.length}',
+                      style: TextStyle(
+                        color: Colors.grey.shade400,
+                        fontSize: 16,
                       ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Container(
+                      padding: EdgeInsets.all(30),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade900,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Text(
+                          currentQuestion['question'],
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ...List.generate(
+                    4,
+                    (index) => _buildOptionTile(
+                      currentQuestion['options'][index],
+                      index,
+                      _selectedAnswers[_currentQuestionIndex] == index,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  )
+                ],
               ),
-              const SizedBox(height: 20),
-              ...List.generate(
-                4,
-                (index) => _buildOptionTile(
-                  currentQuestion['options'][index],
-                  index,
-                  _selectedAnswers[_currentQuestionIndex] == index,
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 70),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width - 64,
+                        height: 89,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Colors.black.withOpacity(0.5),
+                              Colors.black.withOpacity(0.3),
+                              Colors.black.withOpacity(0.5),
+                            ],
+                            stops: [0.05, 0.9, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-          Positioned.fill(
-            child: IgnorePointer(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 70),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width - 64,
-                    height: 89,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.black.withOpacity(0.5),
-                          Colors.black.withOpacity(0.3),
-                          Colors.black.withOpacity(0.5),
-                        ],
-                        stops: [0.05, 0.9, 1.0],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
