@@ -12,6 +12,8 @@ A Flutter-based app that enables teachers to create and manage quizzes and assig
 
 ---
 
+## [PPT](https://drive.google.com/file/d/1GTrcy6PZxKsF-ElnkNslXvw4wLoC0yu_/view?usp=sharing)
+
 ## ✨ Key Features
 
 ### 🏫 Class Management
@@ -81,10 +83,6 @@ A Flutter-based app that enables teachers to create and manage quizzes and assig
 
 <hr>
 
-## 🪪 License
-Pariksha is licensed under the MIT license. See [LICENSE](LICENSE) for more information.
-
---- 
 
 <div align="center">
   <p>Made with ❤️ by Team Pariksha</p>
