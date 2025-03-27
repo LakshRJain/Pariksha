@@ -13,6 +13,13 @@ With Pariksha, teachers can set up virtual classrooms, generate AI-powered quizz
 
 ---
 
+Watch the product demo on:
+
+<a href="https://youtu.be/0q6_tBKHaFY">
+    <img src="https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white" alt="LinkedIn Badge"/>
+  </a>
+
+---
 ## [PPT](https://drive.google.com/file/d/1GTrcy6PZxKsF-ElnkNslXvw4wLoC0yu_/view?usp=sharing)
 
 ## ✨ Key Features
