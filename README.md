@@ -11,13 +11,6 @@
 A Flutter-based app that enables teachers to create and manage quizzes and assignments while using AI for question generation, cheating detection, and assignment evaluation. Students can take quizzes, upload assignments, and receive AI-generated feedback.
 
 ---
-Watch the product demo on:
-
-<a href="https://youtu.be/Uimk9lU3B14">
-<!--     <img src="https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white" alt="LinkedIn Badge"/> -->
-  </a> 	
-  
- <hr>
 
 ## ✨ Key Features
 
@@ -34,29 +27,23 @@ Watch the product demo on:
   - Our own **Fine Tuned Gemini Model** is trained to give detailed feedback and preliminary scores based on content quality and relevance
   - Editable scores for teacher review before publishing
   - Comprehensive feedback for students to identify areas for improvement
+    
+### ❓ Quizzes
+- **AI-Powered Question Generation**: Create quizzes manually or use Gemini Models for auto-generated questions.
+- **Smart Scheduling**: Set start/end dates, duration limits, and auto-lock quizzes after deadlines.
+- **Cheating Prevention**: Detect tab switches, external cameras, and unauthorized devices using AI.
+- **Instant Grading & Feedback**: Auto-score objective questions; AI evaluates short answers with detailed feedback.
+- **Quiz Analytics**: Track student performance, accuracy rates, and identify knowledge gaps.
 
 ### 🗣️ Class Chat
 - **Real-time Communication**: Collaborative environment for teachers and students to interact and clarify doubts
-
-## Latest Version - v1.0.0
-<table>
-  <tr>
-    <td>
-      <a href="https://github.com/LakshRJain/Kaksha/releases/download/v1.0.0/Kaksha_v1.0.0.apk">
-        <img src="https://user-images.githubusercontent.com/663460/26973090-f8fdc986-4d14-11e7-995a-e7c5e79ed925.png" alt="Github" width="200">
-      </a>
-    </td>
-  </tr>
-</table>
-
 
 ## 🛠️ Tech Stack
 - **Frontend**: Flutter, Dart
 - **Backend**: Firebase (Firestore, Authentication, Storage)
 - **APIs**:
   - Google Vision API for OCR and analysis
-  - Gemini API for assignment grading and insights
-- **Bluetooth Integration**: Flutter Blue package for attendance
+  - Gemini API for question generation, assignment grading and insights
 
 ## 🚀 Getting Started
 
@@ -70,11 +57,11 @@ Watch the product demo on:
 
 1. Clone the repository:
   ```bash
-    git clone https://github.com/LakshRJain/Kaksha.git
+    git clone https://github.com/LakshRJain/Pariksha.git
   ```
 2. Navigate to the project directory:
   ```bash
-    cd Kaksha
+    cd Pariksha
   ```
 3. Install dependencies:
   ```bash
@@ -95,13 +82,12 @@ Watch the product demo on:
 <hr>
 
 ## 🪪 License
-
-Femunity is licensed under the MIT license. See [LICENSE](LICENSE) for more information.
+Pariksha is licensed under the MIT license. See [LICENSE](LICENSE) for more information.
 
 --- 
 
 <div align="center">
-  <p>Made with ❤️ by Team Kaksha</p>
+  <p>Made with ❤️ by Team Pariksha</p>
 </div>
 
   
